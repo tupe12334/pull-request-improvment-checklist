@@ -39,6 +39,6 @@ stateDiagram-v2
     verified       : Verify the change end to end in the real runtime by running the tests and the repo CI gates locally, and deploy to a dev environment where the repo requires it
     honest_state   : Build the Kev state from verified facts only, list unverified items plainly, write criteria neutrally, and add no hypothetical facts
     threshold      : Ask Kev for the merge noul, probe one noul per concern, fix the highest first, and re-ask until it reaches 0.8 for your own PR or 0.95 for a colleague PR with your fix PR applied
-    stalled        : The score stays below the gate, so create new true facts instead of asking the user: fix the top concern, run more local checks or dry runs, split out unrelated changes, or verify an unverified item, then re-ask, and only when nothing is left to try record the open question on the PR with the Kev scores and do other in-scope tasks
+    stalled        : The score stays below the gate, so create new true facts instead of asking the user, such as fixing the top concern, running more local checks or dry runs, splitting out unrelated changes or verifying an unverified item, then re-ask, and only when nothing is left to try record the open question on the PR with the Kev scores and do other in-scope tasks
     checks_green   : Get every check green, required or not, and merge without administrator bypass
     reported       : Report every round in the PR body or final summary, with the Kev or Jev scores, or the Kev outage and the user answer when no model answered
