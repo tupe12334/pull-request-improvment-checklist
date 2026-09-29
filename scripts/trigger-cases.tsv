@@ -1,0 +1,11 @@
+BLOCK	gh pr merge 2 --squash
+BLOCK	gh pr ready 2 -R o/r
+BLOCK	cd repo && gh pr merge 2
+BLOCK	gh pr ready 2 && gh pr merge 2
+BLOCK	true; gh  pr   merge 3
+BLOCK	(gh pr merge 4)
+ALLOW	gh pr view 2
+ALLOW	git commit -m "the trigger is gh pr merge and gh pr ready"
+ALLOW	python3 - <<'EOF'\ns = "trigger (`gh pr merge` and `gh pr ready`)"\nEOF
+ALLOW	gh pr create --title "Stop gh pr merge text from triggering"
+ALLOW	echo gh pr mergeable

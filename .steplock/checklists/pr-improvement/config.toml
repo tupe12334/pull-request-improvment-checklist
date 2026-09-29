@@ -1,6 +1,8 @@
 #:schema https://raw.githubusercontent.com/polyhook/steplock/main/schemas/checklist-config.schema.json
 on_event = "tool:before"
 on_tool = "bash"
-match_input = "input.command.matches('gh pr (merge|ready)')"
+# Match gh pr merge/ready only where a shell command starts, so the words
+# inside a quoted message or a heredoc do not trigger the gate.
+match_input = 'input.command.matches("(^|[;&|(\n]\\s*)gh\\s+pr\\s+(merge|ready)\\b")'
 reset = "session"
 allow_preview_request = true

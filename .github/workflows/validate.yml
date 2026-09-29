@@ -28,3 +28,4 @@ jobs:
           grep ' steplock-Linux-x86_64.tar.gz$' SHA256SUMS | sha256sum -c -
           tar xzf steplock-Linux-x86_64.tar.gz
       - run: ./steplock validate
+      - run: python3 scripts/check-trigger.py ./steplock
