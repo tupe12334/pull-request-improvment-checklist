@@ -11,11 +11,11 @@ The checklist follows the Kev workflow: a local decision model ([jaredpalmer/kev
    - Kev answers: continue at step 3.
    - Kev does not answer: run the **Kev unavailable** subflow.
 3. **Scope**: ask Kev keep / split / grow, then move unrelated changes to their own PR.
-4. **Design choices**: put each non-obvious decision to Kev as its own `choice`.
+4. **Design choices**: put each non-obvious decision to Kev as its own `choice` and take the top option. On a near-tie, add verified facts and re-ask. Do not hand the choice to the user.
 5. **Verified**: run the tests, the local CI gates, and a dev-environment deploy where required.
 6. **Honest state**: build the Kev state from verified facts only, with neutral criteria.
 7. **Threshold**: probe concerns and fix until the merge `noul` reaches 0.8 (own PR) or 0.95 (colleague PR with fix PR applied).
-   - Stalled: leave the PR open, record the open question with scores, do other tasks Kev approves, and return to step 7 when new facts exist. A stalled score never unlocks the merge.
+   - Stalled: do not ask the user. Create new true facts: fix the top concern, run more local checks or dry runs, split out unrelated changes, or verify an unverified item. Then re-ask. Only when nothing is left to try, record the open question on the PR with the scores and do other in-scope tasks. A stalled score never unlocks the merge.
 8. **Checks green**: get every check green and merge without admin bypass.
 9. **Reported**: report every round's scores in the PR body or summary.
 
