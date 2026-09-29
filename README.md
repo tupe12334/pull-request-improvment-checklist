@@ -4,9 +4,7 @@ A [steplock](https://github.com/polyhook/steplock) checklist that makes an AI co
 
 The checklist follows the Kev workflow: a local decision model ([jaredpalmer/kev](https://github.com/jaredpalmer/kev)) is the merge gate, and a low score means the PR needs more work, not a handoff to the user.
 
-## Flow
-
-The steps, branches and the Kev-unavailable subflow are defined in one place: [`flow.mmd`](.steplock/checklists/pr-improvement/flow.mmd). GitHub renders it as a diagram. The trigger commands are in [`config.toml`](.steplock/checklists/pr-improvement/config.toml).
+The steps are defined in [`flow.mmd`](.steplock/checklists/pr-improvement/flow.mmd), and the trigger in [`config.toml`](.steplock/checklists/pr-improvement/config.toml).
 
 ## Install
 
