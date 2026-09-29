@@ -7,14 +7,23 @@ The checklist follows the Kev workflow: a local decision model ([jaredpalmer/kev
 ## Steps
 
 1. **Fresh state**: re-read the PR and fetch the base branch.
-2. **Scope**: ask Kev keep / split / grow; move unrelated changes to their own PR.
-3. **Design choices**: put each non-obvious decision to Kev as its own `choice`.
-4. **Verified**: run the tests, the local CI gates, and a dev-environment deploy where required.
-5. **Honest state**: build the Kev state from verified facts only, with neutral criteria.
-6. **Threshold**: probe concerns and fix until the merge `noul` reaches 0.8 (own PR) or 0.95 (colleague PR with fix PR applied).
-   - Reached: **checks green**. Get every check green; merge without admin bypass.
-   - Stalled: stop the merge, record the open question with scores, do other tasks Kev approves.
-7. **Reported**: report every round's scores in the PR body or summary.
+2. **Probe Kev**: send one request to `localhost:8009/v1/systemone` with a 90 second timeout.
+   - Kev answers: continue at step 3.
+   - Kev does not answer: run the **Kev unavailable** subflow.
+3. **Scope**: ask Kev keep / split / grow, then move unrelated changes to their own PR.
+4. **Design choices**: put each non-obvious decision to Kev as its own `choice`.
+5. **Verified**: run the tests, the local CI gates, and a dev-environment deploy where required.
+6. **Honest state**: build the Kev state from verified facts only, with neutral criteria.
+7. **Threshold**: probe concerns and fix until the merge `noul` reaches 0.8 (own PR) or 0.95 (colleague PR with fix PR applied).
+   - Stalled: leave the PR open, record the open question with scores, do other tasks Kev approves, and return to step 7 when new facts exist. A stalled score never unlocks the merge.
+8. **Checks green**: get every check green and merge without admin bypass.
+9. **Reported**: report every round's scores in the PR body or summary.
+
+### Kev unavailable subflow
+
+1. **Restart Kev**: `launchctl kickstart -k gui/$(id -u)/io.kev.server`, read `~/Library/Logs/kev.log`, and probe again. If Kev answers, return to step 3.
+2. **Use Jev**: send the same requests to hosted Jev (`https://openrouter.ai/api/alpha/decisions`, model `~typesafe/jev-latest`). If Jev answers, return to step 3 with Jev in place of Kev.
+3. **User gate**: when no model answers, verify end to end, ask the user for the go/no-go, and continue to step 8 only on an explicit yes.
 
 The flow lives in [`flow.mmd`](.steplock/checklists/pr-improvement/flow.mmd); the trigger in [`config.toml`](.steplock/checklists/pr-improvement/config.toml).
 

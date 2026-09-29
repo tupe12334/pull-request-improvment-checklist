@@ -1,22 +1,37 @@
 stateDiagram-v2
     [*] --> fresh_state
-    fresh_state --> scope
+    fresh_state --> probe_kev
+    probe_kev --> scope
+    probe_kev --> restart_kev
+
+    state kev_unavailable {
+        restart_kev --> use_jev
+        use_jev --> user_gate
+    }
+    restart_kev --> scope
+    use_jev --> scope
+    user_gate --> checks_green
+
     scope --> design_choices
     design_choices --> verified
     verified --> honest_state
     honest_state --> threshold
     threshold --> checks_green
     threshold --> stalled
+    stalled --> threshold
     checks_green --> reported
-    stalled --> reported
     reported --> [*]
 
     fresh_state    : Re-read the PR with gh pr view --json state,mergedBy,headRefOid and fetch the base branch, then confirm it is still open and nothing changed since your last look
+    probe_kev      : Send one request to Kev with curl -m 90 -w '\nHTTP %{http_code}\n' -X POST http://localhost:8009/v1/systemone and check that it answers with HTTP 200 and probabilities
+    restart_kev    : Kev did not answer, so restart it with launchctl kickstart -k gui/$(id -u)/io.kev.server, read ~/Library/Logs/kev.log, wait for port 8009 and probe it again
+    use_jev        : Kev is still down, so send the same requests to hosted Jev at https://openrouter.ai/api/alpha/decisions with model ~typesafe/jev-latest, and use Jev wherever this checklist says Kev
+    user_gate      : No decision model answers, so verify the change end to end, then ask the user for the merge go-or-no-go with the verified state and the outage, and continue only on an explicit yes
     scope          : Ask Kev whether to keep, split or grow the PR, then move every unrelated change into its own PR
     design_choices : Put each non-obvious naming, layout or scope decision to Kev as its own choice question, and hand near-ties to the user
     verified       : Verify the change end to end in the real runtime by running the tests and the repo CI gates locally, and deploy to a dev environment where the repo requires it
     honest_state   : Build the Kev state from verified facts only, list unverified items plainly, write criteria neutrally, and add no hypothetical facts
     threshold      : Ask Kev for the merge noul, probe one noul per concern, fix the highest first, and re-ask until it reaches 0.8 for your own PR or 0.95 for a colleague PR with your fix PR applied
+    stalled        : The score stays below the gate with all true facts added, so leave the PR open, record the open question on it with the Kev scores, do the other in-scope tasks Kev scores 0.8 or more, and return here when new facts exist
     checks_green   : Get every check green, required or not, and merge without administrator bypass
-    stalled        : Stop this merge, record the open question on the PR with the Kev scores, then ask Kev about other in-scope tasks and do those that reach 0.8
-    reported       : Report the Kev scores for every round in the PR body or final summary
+    reported       : Report every round in the PR body or final summary, with the Kev or Jev scores, or the Kev outage and the user answer when no model answered
