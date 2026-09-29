@@ -1,0 +1,30 @@
+name: validate
+on: [push, pull_request]
+jobs:
+  mermaid:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        mermaid: ['10', '11', 'latest']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-save mermaid@${{ matrix.mermaid }} jsdom
+      - run: node scripts/check-mermaid.mjs
+  steplock:
+    runs-on: ubuntu-latest
+    env:
+      STEPLOCK_VERSION: v0.1.0
+      STEPLOCK_GLOBAL_DIR: ''
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install steplock
+        run: |
+          base=https://github.com/polyhook/steplock/releases/download/$STEPLOCK_VERSION
+          curl -fsSLO "$base/steplock-Linux-x86_64.tar.gz"
+          curl -fsSLO "$base/SHA256SUMS"
+          grep ' steplock-Linux-x86_64.tar.gz$' SHA256SUMS | sha256sum -c -
+          tar xzf steplock-Linux-x86_64.tar.gz
+      - run: ./steplock validate

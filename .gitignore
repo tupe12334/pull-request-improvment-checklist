@@ -1,2 +1,3 @@
 .steplock/audit.log
 .steplock/sessions/
+node_modules/
