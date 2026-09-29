@@ -6,15 +6,15 @@ The checklist follows the Kev workflow: a local decision model ([jaredpalmer/kev
 
 ## Steps
 
-1. **Fresh state**: re-read the PR and the base branch; other sessions may have merged it.
-2. **Scope**: ask Kev keep / split / grow; move unrelated changes out.
-3. **Design choices**: each non-obvious decision is its own Kev `choice`.
-4. **Verified**: tests, local CI gates, and a dev-environment run where required.
-5. **Honest state**: only verified facts, neutral criteria, no hypotheticals.
-6. **Threshold**: merge `noul` at least 0.8 (own PR) or 0.95 (colleague PR with fix PR applied).
-   - Reached: **checks green**, no red check and no admin bypass.
-   - Stalled: record the open question with scores and move to other tasks Kev approves.
-7. **Reported**: every round's scores go in the PR body or summary.
+1. **Fresh state**: re-read the PR and fetch the base branch.
+2. **Scope**: ask Kev keep / split / grow; move unrelated changes to their own PR.
+3. **Design choices**: put each non-obvious decision to Kev as its own `choice`.
+4. **Verified**: run the tests, the local CI gates, and a dev-environment deploy where required.
+5. **Honest state**: build the Kev state from verified facts only, with neutral criteria.
+6. **Threshold**: probe concerns and fix until the merge `noul` reaches 0.8 (own PR) or 0.95 (colleague PR with fix PR applied).
+   - Reached: **checks green**. Get every check green; merge without admin bypass.
+   - Stalled: stop the merge, record the open question with scores, do other tasks Kev approves.
+7. **Reported**: report every round's scores in the PR body or summary.
 
 The flow lives in [`flow.mmd`](.steplock/checklists/pr-improvement/flow.mmd); the trigger in [`config.toml`](.steplock/checklists/pr-improvement/config.toml).
 

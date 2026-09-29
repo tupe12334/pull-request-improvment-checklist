@@ -11,12 +11,12 @@ stateDiagram-v2
     stalled --> reported
     reported --> [*]
 
-    fresh_state    : Did you re-read the PR (gh pr view --json state,mergedBy,headRefOid) and fetch the base branch in this turn, and confirm it is still open and nobody merged or pushed since your last look?
-    scope          : Did you ask Kev whether the PR should stay as is, be split, or grow, and move every change unrelated to its purpose into its own PR?
-    design_choices : Did you put each non-obvious naming, layout or scope decision to Kev as its own choice question, and hand near-ties to the user?
-    verified       : Is the change verified end to end in the real runtime (tests run, repo CI gates run locally, dev environment run where the repo requires one), not only by green CI?
-    honest_state   : Is the Kev state built only from facts you verified in the system, with unverified items listed plainly, neutral criteria, and no hypothetical facts or rewording to move the score?
-    threshold      : Did Kev's merge noul reach the gate (0.8 for your own PR, 0.95 for a colleague's PR with your fix PR applied), after probing one noul per concern and fixing the highest first?
-    checks_green   : Are all checks green (no red check, required or not) and no administrator bypass is being used?
-    stalled        : Score stayed below the gate after all true facts were added. Did you record the open question on the PR with the scores, stop this merge, and ask Kev about other in-scope tasks instead?
-    reported       : Did you report Kev's scores for every round in the PR body or final summary?
+    fresh_state    : Re-read the PR (gh pr view --json state,mergedBy,headRefOid) and fetch the base branch; confirm it is still open and nothing changed since your last look
+    scope          : Ask Kev whether to keep, split or grow the PR; move every unrelated change into its own PR
+    design_choices : Put each non-obvious naming, layout or scope decision to Kev as its own choice question; hand near-ties to the user
+    verified       : Verify the change end to end in the real runtime: run the tests, run the repo CI gates locally, deploy to a dev environment where the repo requires it
+    honest_state   : Build the Kev state from verified facts only; list unverified items plainly, write criteria neutrally, add no hypothetical facts
+    threshold      : Ask Kev for the merge noul; probe one noul per concern, fix the highest first, re-ask until it reaches 0.8 (own PR) or 0.95 (colleague PR with your fix PR applied)
+    checks_green   : Get every check green, required or not; merge without administrator bypass
+    stalled        : Stop this merge; record the open question on the PR with Kev's scores; ask Kev about other in-scope tasks and do those that reach 0.8
+    reported       : Report Kev's scores for every round in the PR body or final summary
