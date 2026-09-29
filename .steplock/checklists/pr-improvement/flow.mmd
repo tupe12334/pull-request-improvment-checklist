@@ -3,12 +3,17 @@ stateDiagram-v2
     fresh_state --> probe_kev
     probe_kev --> scope
     probe_kev --> restart_kev
+    probe_kev --> kev_missing
 
     state kev_unavailable {
         restart_kev --> use_jev
+        kev_missing --> install_kev
+        kev_missing --> use_jev
+        install_kev --> use_jev
         use_jev --> user_gate
     }
     restart_kev --> scope
+    install_kev --> scope
     use_jev --> scope
     user_gate --> checks_green
 
@@ -24,8 +29,10 @@ stateDiagram-v2
 
     fresh_state    : Re-read the PR with gh pr view --json state,mergedBy,headRefOid and fetch the base branch, then confirm it is still open and nothing changed since your last look
     probe_kev      : Send one POST to Kev at localhost port 8009 path /v1/systemone with curl -m 90 and check that it answers with HTTP 200 and probabilities
-    restart_kev    : Kev did not answer, so restart it with launchctl kickstart -k gui/$(id -u)/io.kev.server, read ~/Library/Logs/kev.log, wait for port 8009 and probe it again
-    use_jev        : Kev is still down, so send the same requests to hosted Jev at openrouter.ai path /api/alpha/decisions with model ~typesafe/jev-latest, and use Jev wherever this checklist says Kev
+    restart_kev    : Kev is installed but did not answer, so restart it with launchctl kickstart -k gui/$(id -u)/io.kev.server, read ~/Library/Logs/kev.log, wait for port 8009 and probe it again
+    kev_missing    : Kev is not installed, with no io.kev.server launchd agent and no kev checkout, so ask the user whether to install it and wait for their answer
+    install_kev    : The user approved the install, so clone github.com/jaredpalmer/kev, start its server on port 8009 as its README describes, register it as the io.kev.server launchd agent and probe it until it answers
+    use_jev        : Kev is down, failed to install or the user declined the install, so send the same requests to hosted Jev at openrouter.ai path /api/alpha/decisions with model ~typesafe/jev-latest, and use Jev wherever this checklist says Kev
     user_gate      : No decision model answers, so verify the change end to end, then ask the user for the merge go-or-no-go with the verified state and the outage, and continue only on an explicit yes
     scope          : Ask Kev whether to keep, split or grow the PR, then move every unrelated change into its own PR
     design_choices : Put each non-obvious naming, layout or scope decision to Kev as its own choice question, and hand near-ties to the user

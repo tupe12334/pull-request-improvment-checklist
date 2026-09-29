@@ -21,9 +21,12 @@ The checklist follows the Kev workflow: a local decision model ([jaredpalmer/kev
 
 ### Kev unavailable subflow
 
-1. **Restart Kev**: `launchctl kickstart -k gui/$(id -u)/io.kev.server`, read `~/Library/Logs/kev.log`, and probe again. If Kev answers, return to step 3.
-2. **Use Jev**: send the same requests to hosted Jev (`https://openrouter.ai/api/alpha/decisions`, model `~typesafe/jev-latest`). If Jev answers, return to step 3 with Jev in place of Kev.
-3. **User gate**: when no model answers, verify end to end, ask the user for the go/no-go, and continue to step 8 only on an explicit yes.
+1. **Restart Kev** (installed but not answering): `launchctl kickstart -k gui/$(id -u)/io.kev.server`, read `~/Library/Logs/kev.log`, and probe again. If Kev answers, return to step 3.
+2. **Kev missing** (no `io.kev.server` launchd agent, no checkout): ask the user whether to install Kev and wait for the answer.
+   - **Install Kev** (user approved): clone [jaredpalmer/kev](https://github.com/jaredpalmer/kev), start its server on port 8009, register it as the `io.kev.server` launchd agent, and probe until it answers. Then return to step 3.
+   - User declined, or the install failed: go to Use Jev.
+3. **Use Jev**: send the same requests to hosted Jev (`https://openrouter.ai/api/alpha/decisions`, model `~typesafe/jev-latest`). If Jev answers, return to step 3 with Jev in place of Kev.
+4. **User gate**: when no model answers, verify end to end, ask the user for the go/no-go, and continue to step 8 only on an explicit yes.
 
 The flow lives in [`flow.mmd`](.steplock/checklists/pr-improvement/flow.mmd); the trigger in [`config.toml`](.steplock/checklists/pr-improvement/config.toml).
 
