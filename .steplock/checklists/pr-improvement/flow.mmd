@@ -31,7 +31,7 @@ stateDiagram-v2
     reported --> [*]
 
     fresh_state    : Re-read the PR with gh pr view --json state,mergedBy,headRefOid and fetch the base branch, then confirm it is still open and nothing changed since your last look
-    repo_kind      : Decide whether the PR changes only a configuration repository, such as a skill library, a checklist repo or an agent config repo that pins skills, or whether it changes code, and write that decision down, because it decides whether a stalled Kev gate may be skipped
+    repo_kind      : List the changed files with gh pr diff --name-only and write down the repo kind. It is a configuration repo only when every file is skill or checklist Markdown, a flow or config file, or a submodule gitlink, in a skill library, checklist repo or agent config repo. Any source code, script, workflow or test file makes it a code change
     probe_kev      : Send one POST to Kev at localhost port 8009 path /v1/systemone with curl -m 90 and check that it answers with HTTP 200 and probabilities
     restart_kev    : Kev is installed but did not answer, so restart it with launchctl kickstart -k gui/$(id -u)/io.kev.server, read ~/Library/Logs/kev.log, wait for port 8009 and probe it again
     kev_missing    : Kev is not installed, with no io.kev.server launchd agent and no kev checkout, so ask the user whether to install it and wait for their answer
