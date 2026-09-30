@@ -27,6 +27,9 @@ stateDiagram-v2
     stalled --> threshold
     stalled --> config_skip
     config_skip --> checks_green
+    threshold --> config_checks
+    config_skip --> config_checks
+    config_checks --> reported
     checks_green --> reported
     reported --> [*]
 
@@ -46,4 +49,5 @@ stateDiagram-v2
     stalled        : The score stays below the gate, so create new true facts instead of asking the user, such as fixing the top concern, running more local checks or dry runs, splitting out unrelated changes or verifying an unverified item, then re-ask, and only when nothing is left to try record the open question on the PR with the Kev scores and do other in-scope tasks
     config_skip    : The PR changes only a configuration repository and the Kev score stalled after every true fact was tried, so record the Kev scores and the skip in the PR body and go on to merge. Never take this step for a code change, where the Kev gate always holds
     checks_green   : Get every check green, required or not, and merge without administrator bypass
+    config_checks  : The PR changes only a configuration repository and a check fails the same way on the base branch or never started, so run that check locally, fix any failure the change itself caused, record the local result and the base-branch evidence in the PR body, and merge without administrator bypass. Never take this step for a code change
     reported       : Report every round in the PR body or final summary, with the Kev or Jev scores, or the Kev outage and the user answer when no model answered
