@@ -1,6 +1,7 @@
 stateDiagram-v2
     [*] --> fresh_state
-    fresh_state --> probe_kev
+    fresh_state --> repo_kind
+    repo_kind --> probe_kev
     probe_kev --> scope
     probe_kev --> restart_kev
     probe_kev --> kev_missing
@@ -24,10 +25,13 @@ stateDiagram-v2
     threshold --> checks_green
     threshold --> stalled
     stalled --> threshold
+    stalled --> config_skip
+    config_skip --> checks_green
     checks_green --> reported
     reported --> [*]
 
     fresh_state    : Re-read the PR with gh pr view --json state,mergedBy,headRefOid and fetch the base branch, then confirm it is still open and nothing changed since your last look
+    repo_kind      : List the changed files with gh pr diff --name-only and write down the repo kind. It is a configuration repo only when every file is skill or checklist Markdown, a flow or config file, or a submodule gitlink, in a skill library, checklist repo or agent config repo. Any source code, script, workflow or test file makes it a code change
     probe_kev      : Send one POST to Kev at localhost port 8009 path /v1/systemone with curl -m 90 and check that it answers with HTTP 200 and probabilities
     restart_kev    : Kev is installed but did not answer, so restart it with launchctl kickstart -k gui/$(id -u)/io.kev.server, read ~/Library/Logs/kev.log, wait for port 8009 and probe it again
     kev_missing    : Kev is not installed, with no io.kev.server launchd agent and no kev checkout, so ask the user whether to install it and wait for their answer
@@ -40,5 +44,6 @@ stateDiagram-v2
     honest_state   : Build the Kev state from verified facts only, list unverified items plainly, write criteria neutrally, and add no hypothetical facts
     threshold      : Ask Kev for the merge noul, probe one noul per concern, fix the highest first, and re-ask until it reaches 0.8 for your own PR or 0.95 for a colleague PR with your fix PR applied
     stalled        : The score stays below the gate, so create new true facts instead of asking the user, such as fixing the top concern, running more local checks or dry runs, splitting out unrelated changes or verifying an unverified item, then re-ask, and only when nothing is left to try record the open question on the PR with the Kev scores and do other in-scope tasks
+    config_skip    : The PR changes only a configuration repository and the Kev score stalled after every true fact was tried, so record the Kev scores and the skip in the PR body and go on to merge. Never take this step for a code change, where the Kev gate always holds
     checks_green   : Get every check green, required or not, and merge without administrator bypass
     reported       : Report every round in the PR body or final summary, with the Kev or Jev scores, or the Kev outage and the user answer when no model answered

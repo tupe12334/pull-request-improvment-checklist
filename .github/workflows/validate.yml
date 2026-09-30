@@ -16,7 +16,7 @@ jobs:
   steplock:
     runs-on: ubuntu-latest
     env:
-      STEPLOCK_VERSION: v0.1.0
+      STEPLOCK_VERSION: v0.2.1
       STEPLOCK_GLOBAL_DIR: ''
     steps:
       - uses: actions/checkout@v4
@@ -29,3 +29,4 @@ jobs:
           tar xzf steplock-Linux-x86_64.tar.gz
       - run: ./steplock validate
       - run: python3 scripts/check-trigger.py ./steplock
+      - run: python3 scripts/check-paths.py ./steplock
