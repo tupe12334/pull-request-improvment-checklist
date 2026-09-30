@@ -1,8 +1,9 @@
 #:schema https://raw.githubusercontent.com/polyhook/steplock/main/schemas/checklist-config.schema.json
 on_event = "tool:before"
 on_tool = "bash"
-# Match gh pr merge/ready only where a shell command starts, so the words
-# inside a quoted message or a heredoc do not trigger the gate.
-match_input = 'input.command.matches("(^|[;&|(\n]\\s*)gh\\s+pr\\s+(merge|ready)\\b")'
+# Match gh pr merge only where a shell command starts, so the words inside a
+# quoted message or a heredoc do not trigger the gate. gh pr ready is left
+# out: it merges nothing, and gating it ran the checklist twice per PR.
+match_input = 'input.command.matches("(^|[;&|(\n]\\s*)gh\\s+pr\\s+merge\\b")'
 reset = "session"
 allow_preview_request = true

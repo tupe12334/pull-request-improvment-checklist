@@ -9,6 +9,9 @@ head = ["repo_kind", "probe_kev", "scope", "design_choices", "verified", "honest
 cases = [
     ("config repo skips a stalled gate", head + ["stalled", "config_skip", "checks_green", "reported"], True),
     ("gate passed", head + ["checks_green", "reported"], True),
+    ("config repo merges over a base-branch red check", head + ["config_checks", "reported"], True),
+    ("config repo skip then red check", head + ["stalled", "config_skip", "config_checks", "reported"], True),
+    ("no red-check exception before the gate", ["repo_kind", "probe_kev", "config_checks"], False),
     ("no skip straight from threshold", head + ["config_skip"], False),
     ("no skip before the gate", ["repo_kind", "probe_kev", "config_skip"], False),
 ]
