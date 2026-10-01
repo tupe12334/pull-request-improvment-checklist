@@ -1,6 +1,6 @@
 # pull-request-improvment-checklist
 
-A [steplock](https://github.com/polyhook/steplock) checklist that makes an AI coding agent improve a pull request before it runs `gh pr merge`. `gh pr ready` is not gated, because it merges nothing.
+A [steplock](https://github.com/polyhook/steplock) checklist that makes an AI coding agent improve a pull request before it runs `gh pr merge`. `gh pr ready` is not gated, because it merges nothing. The trigger ignores the merge command when it appears inside quoted text, such as a PR body passed with `--body`. If the quotes in a command do not balance, it gates any mention of the merge command, so it never lets a real merge through.
 
 The checklist follows the Kev workflow: a local decision model ([jaredpalmer/kev](https://github.com/jaredpalmer/kev)) is the merge gate, and a low score means the PR needs more work, not a handoff to the user.
 

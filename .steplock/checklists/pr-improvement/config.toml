@@ -1,9 +1,14 @@
 #:schema https://raw.githubusercontent.com/polyhook/steplock/main/schemas/checklist-config.schema.json
 on_event = "tool:before"
 on_tool = "bash"
-# Match gh pr merge only where a shell command starts, so the words inside a
-# quoted message or a heredoc do not trigger the gate. gh pr ready is left
-# out: it merges nothing, and gating it ran the checklist twice per PR.
-match_input = 'input.command.matches("(^|[;&|(\n]\\s*)gh\\s+pr\\s+merge\\b")'
+# Match gh pr merge only where a shell command starts outside quotes, so a
+# quoted --body or commit message that mentions it does not trigger the gate.
+# The first regex steps over complete '...' and "..." strings before looking
+# for a command start. When the quotes do not balance (an apostrophe inside a
+# heredoc, say), the quote-aware match cannot be trusted, so the second clause
+# falls back to the old match anywhere in the text: unbalanced quotes never
+# let a merge through. gh pr ready is left out: it merges nothing, and gating
+# it ran the checklist twice per PR.
+match_input = 'input.command.matches("(?s)^(?:(?:[^\\x27\\x22\\x5c]|\\x5c.|\\x27[^\\x27]*\\x27|\\x22(?:[^\\x22\\x5c]|\\x5c.)*\\x22)*[;&|(\\n])?\\s*gh\\s+pr\\s+merge\\b") || (!input.command.matches("(?s)^(?:[^\\x27\\x22\\x5c]|\\x5c.|\\x27[^\\x27]*\\x27|\\x22(?:[^\\x22\\x5c]|\\x5c.)*\\x22)*$") && input.command.matches("(?:^|[;&|(\\n])\\s*gh\\s+pr\\s+merge\\b"))'
 reset = "session"
 allow_preview_request = true
