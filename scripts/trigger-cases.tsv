@@ -9,3 +9,11 @@ ALLOW	git commit -m "the trigger is gh pr merge and gh pr ready"
 ALLOW	python3 - <<'EOF'\ns = "trigger (`gh pr merge` and `gh pr ready`)"\nEOF
 ALLOW	gh pr create --title "Stop gh pr merge text from triggering"
 ALLOW	echo gh pr mergeable
+ALLOW	gh pr create --body "done && gh pr merge 1 later"
+ALLOW	gh pr edit 1 --body 'step one; gh pr merge 2'
+ALLOW	gh pr create --body "say \"hi\" && gh pr merge 1"
+ALLOW	gh pr create --body "$(cat <<'EOF'\nDon't && gh pr merge it\nEOF\n)"
+BLOCK	gh pr create --body "x && gh pr merge 1" && gh pr merge 2
+BLOCK	echo 'a' ; gh pr merge 3
+BLOCK	cat <<'EOF'\nit's done\nEOF\ngh pr merge 4
+BLOCK	echo "unclosed && gh pr merge 5
