@@ -21,3 +21,7 @@ steplock validate
 ```
 
 The steplock hook must be registered in the agent's settings; see the [steplock installation guide](https://github.com/polyhook/steplock/blob/main/Installation.md).
+
+## Related projects
+
+- [moadim](https://moadim.io/): loop engineering. Build, schedule and run agent loops.
